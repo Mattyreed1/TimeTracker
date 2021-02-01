@@ -49,3 +49,39 @@ function getCategoriesDict(){
   Logger.log(dict_data);
   return dict_data;
 }
+
+function updateSubcategoriesSheet(){
+  var spreadsheetId = '1SUjssEx1ZJhYLLA0msE59Z_nJR1A4agV8WNy3vcmhi4';
+  var sheet = Sheets.Spreadsheets.get(spreadsheetId);
+  var range = 'Calendar Subcategories Data!A1:1';
+  // Get categories dict
+  var catDict = getCategoriesDict();
+
+  // Create subcategories array
+  var subcatArray = []
+  for (var key in catDict){
+    for (i=0; i<catDict[key].length; i++){
+      var sub = catDict[key][i];
+      Logger.log(sub)
+      var subcatTitle = `${key} - ${sub}`;
+      subcatArray.push(subcatTitle);
+      }
+    }
+  Logger.log(subcatArray);
+
+  // Create valueRange object using the category durations array
+  var valueRange = Sheets.newValueRange();
+  valueRange.values = [subcatArray];
+  Logger.log(valueRange)
+
+  // Make request to append a new column
+  var appendRequest = Sheets.newAppendCellsRequest();
+  appendRequest.sheetId = spreadsheetId;
+  appendRequest.rows = valueRange;
+
+  // Update the column headers in row 1 
+  var result = Sheets.Spreadsheets.Values.update(valueRange, spreadsheetId, range, {
+    valueInputOption: 'RAW'
+  });
+
+}

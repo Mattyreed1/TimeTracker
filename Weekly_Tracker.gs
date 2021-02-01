@@ -81,7 +81,7 @@ function trackEvents(timeMin, timeMax){
   // var cals =  ['mattyreed1@gmail.com']; 
   var cals = [
   'mattyreed1@gmail.com',
-  '18tv35iuq4qba39cmhmb6tik4fboahj3@import.calendar.google.com',
+  'bq5l81tfb8huqtm05jf75o0pbvrvfqao@import.calendar.google.com',
   'orf8kkd6vl85hbqrnrckoi3v25548uhl@import.calendar.google.com'];
   var events = [];
   // Define optional arguments for event data capture
@@ -116,13 +116,14 @@ function getEventDetails(eventsList) {
   var eventDurations = [0,0,0,0,0,0,0,0,0,0,0,0];
   // loop thru calendars
   for (e = 0; e < eventsList.length; e++) {
+    Logger.log(eventsList[e]);
  
     // loop thru the events
     for (i = 0; i < eventsList[e].length; i++) {  
        
       // get one event from the list of events
       var myEvent = eventsList[e][i];
-      Logger.log(myEvent);
+      // Logger.log(myEvent);
       // get the color of the single event
       if (e > 0){
         var colorID = 10;
@@ -145,6 +146,7 @@ function getEventDetails(eventsList) {
       var durationSum = eventDurations[colorID] + duration;
       eventDurations[colorID] = durationSum;
     }
+    Logger.log(eventDurations);
   }
   
     Logger.log(eventDurations);
