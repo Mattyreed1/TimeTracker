@@ -11,7 +11,8 @@ function updateSpreadsheet(durationsArray, date) {
   // Create valueRange object using the category durations array
   var valueRange = Sheets.newRowData();
   valueRange.values = categoryDurations;
-  Logger.log(valueRange)
+  Logger.log("category durations: %s",categoryDurations);
+  Logger.log("values in range: %s", valueRange);
 
   // Make request to append a new row 
   var appendRequest = Sheets.newAppendCellsRequest();

@@ -8,15 +8,21 @@ function runScriptWeekly() {
   };
   */
 
-  // Set start day one week ago
-  var startDay = new Date(new Date().getTime() - (1000 * 60 * 60 * 24)*(7));
+  // EDIT INPUT /////
+  var numberWeeks = 1;
+  var shiftHours = 0;
+  ///////////////////
 
-  var list = listOfWeeks(startDay, 'null', 1);
-  // Logger.log(list);
+  // Set start day one week ago
+  var startDay = new Date(new Date().getTime() - (1000 * 60 * 60 * 24)*(7 * numberWeeks) + (1000 * 60 * 60 * shiftHours));
+
+  var list = listOfWeeks(startDay, 'null', numberWeeks);
+  Logger.log("Weeks: %s", list);
   for (n = 0; n < list.length; n++){
     Logger.log('%s - %s', list[n][0], list[n][1]);
     var eventsList = trackEvents(list[n][0], list[n][1]);
     var eventsData = getEventDetails(eventsList);
+
     /*
     var eventsDatalist = [];
     // Cycle through each calendar events list
@@ -28,7 +34,7 @@ function runScriptWeekly() {
     }
     */
 
-    updateSpreadsheet(eventsData,startDay);
+    updateSpreadsheet(eventsData,list[n][0], list[n][1]);
     // saveData(eventData);
     // weeklyCalendarTracker(list[n][1]);
   }
@@ -67,7 +73,7 @@ function listOfWeeks(startDay, endDay, inputNumOfWeeks=0) {
     listWeeks.push(startEnd);
   };
   //~~~~~~~~~~~~~~~RETURN A LIST OF START/END TIMES FOR # OF WEEKS~~~~~~~~~~~~~~~~~~~~~~
-  // Logger.log(listWeeks);
+  //Logger.log(listWeeks);
   return listWeeks;
 
   // Logger.log('%s , %s',startWeek1, endTimeFrame);
@@ -77,7 +83,7 @@ function listOfWeeks(startDay, endDay, inputNumOfWeeks=0) {
 //~~~~~~~~~~~~~~~~~~TAKE START/END DAYS FOR INDIVIDUAL WEEK~~~~~~~~~~~~~~~~~~~~
 function trackEvents(timeMin, timeMax){
   // List your calendars.
-  //**Can I Find a way to capture data from all calendars in account? **/
+  //**********Can I Find a way to capture data from all calendars in account? ***********/
   // var cals =  ['mattyreed1@gmail.com']; 
   var cals = [
   'mattyreed1@gmail.com',
@@ -116,7 +122,7 @@ function getEventDetails(eventsList) {
   var eventDurations = [0,0,0,0,0,0,0,0,0,0,0,0];
   // loop thru calendars
   for (e = 0; e < eventsList.length; e++) {
-    Logger.log(eventsList[e]);
+    //Logger.log(eventsList[e]);
  
     // loop thru the events
     for (i = 0; i < eventsList[e].length; i++) {  
@@ -141,16 +147,20 @@ function getEventDetails(eventsList) {
       // Get duration of event
       var duration = ((end - start)/(1000 * 60 * 60)); 
       Logger.log('color ID: %s. duration: %s', colorID, duration);
+      duration = duration || 0;
 
       // Add duration values to list
       var durationSum = eventDurations[colorID] + duration;
       eventDurations[colorID] = durationSum;
     }
-    Logger.log(eventDurations);
   }
-  
-    Logger.log(eventDurations);
-    return eventDurations;
+  // Convert NaN to 0.
+  for (let k in eventDurations) {
+    eventDurations[k] = eventDurations[k] || 0;
+  };
+
+  Logger.log(eventDurations);
+  return eventDurations;
 }  
 
 
